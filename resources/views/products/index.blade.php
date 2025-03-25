@@ -32,20 +32,16 @@
 
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script>
-    // Configure Pusher
-    Pusher.logToConsole = true; // Remove in production
+    Pusher.logToConsole = true;
     var pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
         cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
     });
 
-    // Subscribe to the 'products-channel'
     var channel = pusher.subscribe("products-channel");
 
-    // Listen for 'product-added' event
     channel.bind("product-added", function(data) {
         let product = data.product;
 
-        // Dynamically add new product to the table
         let newRow = `
                 <tr>
                     <td>${product.id}</td>

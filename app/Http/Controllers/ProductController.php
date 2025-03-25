@@ -15,13 +15,11 @@ class ProductController extends Controller
     {
         $response = Http::get('https://fakestoreapi.com/products');
 
-        // Check if the request was successful
-        if ($response->successful()) {
-            $products = $response->json(); // Get the products as an array
 
-            // Loop through the products and store them in the database
+        if ($response->successful()) {
+            $products = $response->json();
+
             foreach ($products as $productData) {
-                // Store or update the product
                 $product = Product::updateOrCreate(
                     ['id' => $productData['id']],
                     [
@@ -31,11 +29,10 @@ class ProductController extends Controller
                     ]
                 );
 
-                // Broadcast the ProductUpdated event to notify clients
                 event(new ProductUpdated($product));
             }
 
-            $allProducts = Product::all(); // Fetch all products from the database
+            $allProducts = Product::all();
             return view('products.index', compact('allProducts'));
         }
 
